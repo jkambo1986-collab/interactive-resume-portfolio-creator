@@ -11,8 +11,9 @@ import type { ResumeData, SearchResult, GroundingSource, OutreachKit, ABTestResu
 declare const mammoth: any;
 
 // --- Model Constants ---
-const MODEL_PRO = 'gemini-1.5-pro-latest';       // Updated to latest stable models
-const MODEL_FLASH = 'gemini-1.5-flash-latest';
+const MODEL_PRO = 'gemini-3-pro-preview';       // Primary "heavy lifting" model
+const MODEL_FLASH = 'gemini-3-flash-preview';   // Faster, concise tasks
+const MODEL_AUDIO = 'gemini-2.5-flash-native-audio-preview-09-2025'; // Interview Simulator
 
 const RESUME_OPTIMIZATION_RULES = `
 CRITICAL OPTIMIZATION RULES:
