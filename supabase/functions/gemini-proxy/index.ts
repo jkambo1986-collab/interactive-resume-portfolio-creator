@@ -29,16 +29,29 @@ serve(async (req) => {
             generationConfig: config
         })
 
-        // contents from the client might be complex (multipart) or simple text
-        // The SDK expects [ { role: 'user', parts: [...] } ] or similar structure
-        // We pass it through directly as received from the trusted client service
-        const result = await model.generateContent(contents)
+        // Normalize contents format for SDK compatibility
+        // The SDK expects either a string or properly formatted content parts
+        let normalizedContents = contents;
+
+        // If contents is an array and first item has 'parts', transform it
+        if (Array.isArray(contents) && contents.length > 0) {
+            // Check if it's in the old format [{parts: [{text: '...'}]}]
+            if (contents[0].parts && Array.isArray(contents[0].parts)) {
+                // Extract text from parts for simple text-only requests
+                const textParts = contents[0].parts
+                    .filter((p: any) => p.text)
+                    .map((p: any) => p.text)
+                    .join('\n');
+
+                if (textParts) {
+                    normalizedContents = textParts;
+                }
+            }
+        }
+
+        const result = await model.generateContent(normalizedContents)
         const response = await result.response
         const text = response.text()
-
-        // We return a simplified structure or the full candidate object depending on client needs
-        // For now, mirroring what the client expects: { text, candidates, usageMetadata }
-        // Note: The SDK response object has methods, so we construct a plain JSON object
 
         const responseData = {
             text: text,
