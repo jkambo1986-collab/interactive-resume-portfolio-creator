@@ -47,10 +47,12 @@ const callGeminiAPI = async (modelName: string, contents: any, config?: any) => 
             finalContents = contents.parts;
         }
 
-        // DEBUG: Alert to confirm query initiation
-        // window.alert(`[DEBUG] Invoking gemini-proxy for ${modelName}...`);
+        // DEBUG: Alert to confirm query initiation - UNCOMMENTED FOR DEBUGGING
+        window.alert(`[DEBUG] Invoking gemini-proxy for ${modelName}...`);
+        console.log("[DEBUG] Payload being sent:", { modelName, contents: finalContents, config });
 
         const { data, error } = await supabase.functions.invoke('gemini-proxy', {
+            method: 'POST',
             body: {
                 modelName,
                 contents: finalContents,
