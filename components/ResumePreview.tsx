@@ -134,15 +134,15 @@ const ResumePreview: React.FC = () => {
     m.innerHTML = `<style>html, body { height: auto !important; overflow: visible !important; }</style>` + rawHtml;
     document.body.appendChild(m);
     const timer = setTimeout(() => {
-        try {
-            const h = (m.offsetWidth / 210) * 297;
-            setTotalPages(Math.ceil(m.scrollHeight / h) || 1);
-            setCurrentPage(1);
-        } finally { document.body.removeChild(m); }
+      try {
+        const h = (m.offsetWidth / 210) * 297;
+        setTotalPages(Math.ceil(m.scrollHeight / h) || 1);
+        setCurrentPage(1);
+      } finally { document.body.removeChild(m); }
     }, 150);
     return () => clearTimeout(timer);
   }, [rawHtml]);
-  
+
   const paginatedHtml = useMemo(() => {
     const h = isInteractiveMode ? interactiveHtml : rawHtml;
     if (!h || isInteractiveMode) return h;
@@ -170,16 +170,16 @@ const ResumePreview: React.FC = () => {
     w.innerHTML = `<style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Roboto:wght@400;700&family=Source+Sans+Pro:wght@400;700&display=swap');html,body{height:auto!important;overflow:visible!important;}</style><div id="pc">${rawHtml}</div>`;
     document.body.appendChild(w);
     try {
-        await new Promise(res => setTimeout(res, 500));
-        const c = await window.html2canvas(w.querySelector('#pc'), { scale: 1.5, useCORS: true, backgroundColor: '#ffffff' });
-        const img = c.toDataURL('image/jpeg', 0.95);
-        const pdf = new window.jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-        const pw = pdf.internal.pageSize.getWidth(); const ph = pdf.internal.pageSize.getHeight();
-        const ih = (c.height * pw) / c.width;
-        let hl = ih; let pos = 0;
-        pdf.addImage(img, 'JPEG', 0, pos, pw, ih); hl -= ph;
-        while (hl > 0) { pos -= ph; pdf.addPage(); pdf.addImage(img, 'JPEG', 0, pos, pw, ih); hl -= ph; }
-        pdf.save('resume.pdf');
+      await new Promise(res => setTimeout(res, 500));
+      const c = await window.html2canvas(w.querySelector('#pc'), { scale: 1.5, useCORS: true, backgroundColor: '#ffffff' });
+      const img = c.toDataURL('image/jpeg', 0.95);
+      const pdf = new window.jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      const pw = pdf.internal.pageSize.getWidth(); const ph = pdf.internal.pageSize.getHeight();
+      const ih = (c.height * pw) / c.width;
+      let hl = ih; let pos = 0;
+      pdf.addImage(img, 'JPEG', 0, pos, pw, ih); hl -= ph;
+      while (hl > 0) { pos -= ph; pdf.addPage(); pdf.addImage(img, 'JPEG', 0, pos, pw, ih); hl -= ph; }
+      pdf.save('resume.pdf');
     } finally { setIsDownloadingPdf(false); document.body.removeChild(w); }
   };
 
@@ -214,23 +214,23 @@ const ResumePreview: React.FC = () => {
                 </div>
               </div>
               <div className="p-4 bg-white border-t space-y-3">
-                 <div className="flex gap-2 justify-end">
-                    <button onClick={() => window.print()} className="flex items-center gap-1 text-xs font-bold text-slate-700 border p-2 rounded"><PrinterIcon /> Print</button>
-                    <button onClick={handleDownloadPdf} disabled={isDownloadingPdf} className="flex items-center gap-1 text-xs font-bold text-white bg-green-600 p-2 rounded">{isDownloadingPdf ? '...' : <DocumentArrowDownIcon />} PDF</button>
-                 </div>
-                 <div className="flex gap-1">
-                    <input type="text" value={refinementRequest} onChange={e => setRefinementRequest(e.target.value)} placeholder="Refine layout..." className="flex-grow text-xs border p-2 rounded" />
-                    <button onClick={handleRefineLayout} disabled={isRefining} className="bg-slate-800 text-white p-2 rounded"><SendIcon /></button>
-                 </div>
+                <div className="flex gap-2 justify-end">
+                  <button onClick={() => window.print()} className="flex items-center gap-1 text-xs font-bold text-slate-700 border p-2 rounded"><PrinterIcon /> Print</button>
+                  <button onClick={handleDownloadPdf} disabled={isDownloadingPdf} className="flex items-center gap-1 text-xs font-bold text-white bg-green-600 p-2 rounded">{isDownloadingPdf ? '...' : <DocumentArrowDownIcon />} PDF</button>
+                </div>
+                <div className="flex gap-1">
+                  <input type="text" value={refinementRequest} onChange={e => setRefinementRequest(e.target.value)} placeholder="Refine layout..." className="flex-grow text-xs border p-2 rounded" />
+                  <button onClick={handleRefineLayout} disabled={isRefining} className="bg-slate-800 text-white p-2 rounded"><SendIcon /></button>
+                </div>
               </div>
             </div>
           );
         }
         return (
-          <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4">
-             <DocumentTextIcon className="h-12 w-12 text-sky-200" />
-             <h3 className="text-lg font-bold text-slate-800">No Resume Generated</h3>
-             <p className="text-sm text-slate-500 max-w-xs">Fill out the form on the left and click "Generate" to see your professional resumes.</p>
+          <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4 glass-morphism rounded-xl m-4">
+            <DocumentTextIcon className="h-12 w-12 text-sky-200" />
+            <h3 className="text-lg font-bold text-slate-800">No Resume Generated</h3>
+            <p className="text-sm text-slate-500 max-w-xs">Fill out the form on the left and click "Generate" to see your professional resumes.</p>
           </div>
         );
 
@@ -239,7 +239,7 @@ const ResumePreview: React.FC = () => {
           return (
             <div className="h-full flex flex-col">
               <div className="p-2 bg-slate-100 border-b flex justify-end">
-                <button 
+                <button
                   onClick={() => setIsPortfolioModalOpen(true)}
                   className="flex items-center gap-2 px-3 py-1 bg-white text-slate-700 border border-slate-300 rounded text-xs font-bold hover:bg-slate-50 transition-colors"
                 >
@@ -248,33 +248,33 @@ const ResumePreview: React.FC = () => {
               </div>
               <iframe srcDoc={portfolioHtml} className="flex-grow w-full border-none" sandbox="allow-scripts allow-same-origin" />
               <div className="p-4"><FeedbackCollector id="p" onSubmit={(r, c) => handleFeedbackSubmit('portfolio', null, r, c)} /></div>
-              
-              <PortfolioFullScreenModal 
-                isOpen={isPortfolioModalOpen} 
-                onClose={() => setIsPortfolioModalOpen(false)} 
-                htmlContent={portfolioHtml} 
-                userName={resumeData.personalInfo.name} 
+
+              <PortfolioFullScreenModal
+                isOpen={isPortfolioModalOpen}
+                onClose={() => setIsPortfolioModalOpen(false)}
+                htmlContent={portfolioHtml}
+                userName={resumeData.personalInfo.name}
               />
             </div>
           );
         }
         return (
-          <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4">
-             <GlobeIcon className="h-12 w-12 text-violet-200" />
-             <h3 className="text-lg font-bold text-slate-800">No Portfolio Site Found</h3>
-             <p className="text-sm text-slate-500 max-w-xs">Create a stunning, single-page professional website to showcase your skills online.</p>
-             <button onClick={handleGeneratePortfolio} className="bg-violet-600 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-violet-700 transition-transform active:scale-95">Generate Portfolio</button>
+          <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4 glass-morphism rounded-xl m-4">
+            <GlobeIcon className="h-12 w-12 text-violet-200" />
+            <h3 className="text-lg font-bold text-slate-800">No Portfolio Site Found</h3>
+            <p className="text-sm text-slate-500 max-w-xs">Create a stunning, single-page professional website to showcase your skills online.</p>
+            <button onClick={handleGeneratePortfolio} className="bg-violet-600 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-violet-700 transition-transform active:scale-95">Generate Portfolio</button>
           </div>
         );
 
       case 'outreach':
         if (outreachKit) return < OutreachKitPreview kit={outreachKit} personalInfo={resumeData.personalInfo} />;
         return (
-          <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4">
-             <EnvelopeIcon className="h-12 w-12 text-teal-200" />
-             <h3 className="text-lg font-bold text-slate-800">No Cover Letter Found</h3>
-             <p className="text-sm text-slate-500 max-w-xs">Generate a tailored cover letter and LinkedIn outreach messages based on your target job.</p>
-             <button onClick={handleGenerateOutreachKit} className="bg-teal-600 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-teal-700 transition-transform active:scale-95">Generate Now</button>
+          <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4 glass-morphism rounded-xl m-4">
+            <EnvelopeIcon className="h-12 w-12 text-teal-200" />
+            <h3 className="text-lg font-bold text-slate-800">No Cover Letter Found</h3>
+            <p className="text-sm text-slate-500 max-w-xs">Generate a tailored cover letter and LinkedIn outreach messages based on your target job.</p>
+            <button onClick={handleGenerateOutreachKit} className="bg-teal-600 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-teal-700 transition-transform active:scale-95">Generate Now</button>
           </div>
         );
 
@@ -287,11 +287,11 @@ const ResumePreview: React.FC = () => {
           );
         }
         return (
-          <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4">
-             <MicrophoneIcon className="h-12 w-12 text-rose-200" />
-             <h3 className="text-lg font-bold text-slate-800">Mock Interview Practice</h3>
-             <p className="text-sm text-slate-500 max-w-xs">Prepare for the real thing with an AI-driven interview simulation tailored to your profile.</p>
-             <button onClick={handlePrepareInterview} className="bg-rose-600 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-rose-700 transition-transform active:scale-95">Start Prep Session</button>
+          <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-4 glass-morphism rounded-xl m-4">
+            <MicrophoneIcon className="h-12 w-12 text-rose-200" />
+            <h3 className="text-lg font-bold text-slate-800">Mock Interview Practice</h3>
+            <p className="text-sm text-slate-500 max-w-xs">Prepare for the real thing with an AI-driven interview simulation tailored to your profile.</p>
+            <button onClick={handlePrepareInterview} className="bg-rose-600 text-white px-6 py-2 rounded-lg font-bold shadow-md hover:bg-rose-700 transition-transform active:scale-95">Start Prep Session</button>
           </div>
         );
 
@@ -307,7 +307,7 @@ const ResumePreview: React.FC = () => {
         );
     }
   };
-  
+
   return (
     <div className="bg-white rounded-lg shadow-lg h-full flex flex-col overflow-hidden">
       <div className="p-2 bg-slate-50 border-b flex space-x-1 overflow-x-auto">

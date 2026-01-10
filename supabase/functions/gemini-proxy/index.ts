@@ -37,14 +37,19 @@ serve(async (req) => {
         if (Array.isArray(contents) && contents.length > 0) {
             // Check if it's in the old format [{parts: [{text: '...'}]}]
             if (contents[0].parts && Array.isArray(contents[0].parts)) {
-                // Extract text from parts for simple text-only requests
-                const textParts = contents[0].parts
-                    .filter((p: any) => p.text)
-                    .map((p: any) => p.text)
-                    .join('\n');
+                // Check if ANY part has inlineData (multimodal). If so, DO NOT FLATTEN.
+                const hasBinary = contents[0].parts.some((p: any) => p.inlineData);
 
-                if (textParts) {
-                    normalizedContents = textParts;
+                // Only extract text if it's a pure text request
+                if (!hasBinary) {
+                    const textParts = contents[0].parts
+                        .filter((p: any) => p.text)
+                        .map((p: any) => p.text)
+                        .join('\n');
+
+                    if (textParts) {
+                        normalizedContents = textParts;
+                    }
                 }
             }
         }

@@ -1,0 +1,12 @@
+{
+    "modelName": "gemini-3-flash-preview",
+    "contents": [
+        {
+            "parts": [
+                {
+                    "text": "Hello, verify connection with 3.0 flash model."
+                }
+            ]
+        }
+    ]
+}
