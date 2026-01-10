@@ -176,23 +176,24 @@ const ResumeUploaderComponent: React.FC<ResumeUploaderProps> = ({ onUpload }) =>
     };
 
     return (
-        className = {`relative p-6 border-2 border-dashed rounded-lg transition-all duration-200 cursor-pointer overflow-hidden ${dragActive ? 'border-sky-500 bg-sky-50' : 'border-slate-300 hover:border-sky-400 bg-white hover:bg-slate-50'
-            } ${status !== 'idle' ? 'cursor-default' : ''} ${status === 'idle' ? 'hover:shadow-lg hover:shadow-indigo-500/10' : ''}`}
-onDragEnter = { handleDrag }
-onDragLeave = { handleDrag }
-onDragOver = { handleDrag }
-onDrop = { handleDrop }
-onClick = {() => status === 'idle' && document.getElementById('resume-file-input')?.click()}
+        <div
+            className={`relative p-6 border-2 border-dashed rounded-lg transition-all duration-200 cursor-pointer overflow-hidden ${dragActive ? 'border-sky-500 bg-sky-50' : 'border-slate-300 hover:border-sky-400 bg-white hover:bg-slate-50'
+                } ${status !== 'idle' ? 'cursor-default' : ''} ${status === 'idle' ? 'hover:shadow-lg hover:shadow-indigo-500/10' : ''}`}
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+            onClick={() => status === 'idle' && document.getElementById('resume-file-input')?.click()}
         >
-    <input
-        id="resume-file-input"
-        type="file"
-        className="sr-only"
-        accept=".pdf,.doc,.docx"
-        onChange={handleChange}
-        disabled={status !== 'idle'}
-    />
-{ renderContent() }
+            <input
+                id="resume-file-input"
+                type="file"
+                className="sr-only"
+                accept=".pdf,.doc,.docx"
+                onChange={handleChange}
+                disabled={status !== 'idle'}
+            />
+            {renderContent()}
         </div >
     );
 };
