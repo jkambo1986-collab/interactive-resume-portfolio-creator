@@ -194,6 +194,13 @@ export const parseResumeFromFile = async (file: File): Promise<Partial<ResumeDat
         } catch (parseError) {
             console.error("[GeminiService] JSON parse error:", parseError);
             console.error("[GeminiService] Raw response:", response.text);
+
+            // Check if it's a refusal message (often plain text)
+            const lowerText = response.text.toLowerCase();
+            if (lowerText.includes("cannot fulfill") || lowerText.includes("safety guidelines") || lowerText.includes("harmful")) {
+                throw new Error(`AI Request Refused: ${response.text}`);
+            }
+
             throw new Error("Failed to parse resume data. The AI response was not valid JSON.");
         }
 

@@ -51,7 +51,12 @@ serve(async (req) => {
 
         const result = await model.generateContent(normalizedContents)
         const response = await result.response
-        const text = response.text()
+        let text = '';
+        try {
+            text = response.text();
+        } catch (e) {
+            console.warn("Could not get text from response (likely safety block or empty):", e);
+        }
 
         const responseData = {
             text: text,
