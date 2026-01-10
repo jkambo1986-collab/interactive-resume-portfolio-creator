@@ -47,7 +47,12 @@ const callGeminiAPI = async (modelName: string, contents: any, config?: any) => 
             finalContents = contents.parts;
         }
 
-        // DEBUG: Alert to confirm query initiation - UNCOMMENTED FOR DEBUGGING
+        // DEBUG: Inspect Env Vars (First 10 chars)
+        const urlStart = import.meta.env.VITE_SUPABASE_URL ? import.meta.env.VITE_SUPABASE_URL.substring(0, 15) : "MISSING";
+        const keyStart = import.meta.env.VITE_SUPABASE_ANON_KEY ? import.meta.env.VITE_SUPABASE_ANON_KEY.substring(0, 15) : "MISSING";
+
+        window.alert(`[DEBUG CHECK]\nURL: ${urlStart}...\nKEY: ${keyStart}...`);
+
         window.alert(`[DEBUG] Invoking gemini-proxy for ${modelName}...`);
         console.log("[DEBUG] Payload being sent:", { modelName, contents: finalContents, config });
 
