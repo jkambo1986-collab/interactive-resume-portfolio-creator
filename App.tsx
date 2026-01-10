@@ -58,6 +58,18 @@ const App: React.FC = () => {
   return (
     <div className="bg-slate-100 min-h-screen">
       <Suspense fallback={<div className="fixed inset-0 bg-black/20 z-50 pointer-events-none" />}>
+        {/* Environment Check for Production Debugging */}
+        {!import.meta.env.VITE_SUPABASE_URL && (
+          <div className="fixed top-0 left-0 right-0 bg-red-600 text-white p-4 text-center z-[9999] font-bold">
+            CRITICAL ERROR: VITE_SUPABASE_URL is missing. Please add it to your Vercel Environment Variables.
+          </div>
+        )}
+        {!import.meta.env.VITE_SUPABASE_ANON_KEY && (
+          <div className="fixed top-0 left-0 right-0 bg-red-600 text-white p-4 text-center z-[9999] font-bold mt-12">
+            CRITICAL ERROR: VITE_SUPABASE_ANON_KEY is missing. Please add it to your Vercel Environment Variables.
+          </div>
+        )}
+
         {/* Conditionally render the onboarding guide overlay */}
         {showOnboarding && <OnboardingGuide onClose={handleCloseOnboarding} />}
 
