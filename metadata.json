@@ -1,0 +1,7 @@
+{
+  "name": "ProdV4- Lidia Dec17 2025 Interactive Resume/Portfolio Creator",
+  "description": "An application that takes a user's education history, work history, and career goals as input, and uses AI to generate multiple, custom-designed, aesthetic digital resume and portfolio layouts that can be exported as a PDF.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
