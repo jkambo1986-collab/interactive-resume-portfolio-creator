@@ -48,7 +48,11 @@ const callGeminiAPI = async (modelName: string, contents: any, config?: any) => 
         }
 
         // RAW FETCH IMPLEMENTATION (Bypassing Supabase Client)
-        const projectUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim();
+        let projectUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim();
+        if (!projectUrl.startsWith('http')) {
+            projectUrl = `https://${projectUrl}`;
+        }
+
         const anonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY || '').trim();
         const functionUrl = `${projectUrl}/functions/v1/gemini-proxy`;
 
@@ -83,16 +87,8 @@ const callGeminiAPI = async (modelName: string, contents: any, config?: any) => 
 
         const data = await response.json();
         console.log("[GeminiService] Response Data:", data);
-        // window.alert("[DEBUG] Success! Data received from Gemini."); // Optional: Enable if you want visible proof
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            window.alert(`[DEBUG] Raw Fetch Failed: ${response.status} ${response.statusText}\n${errorText}`);
-            throw new Error(`Proxy Error: ${response.status} ${errorText}`);
-        }
-
-        const data = await response.json();
-        // const { data, error } = await supabase.functions.invoke... (REMOVED)
+        // REMOVED DUPLICATE !response.ok CHECK HERE
 
         if (data.error) {
             throw new Error(data.error);
