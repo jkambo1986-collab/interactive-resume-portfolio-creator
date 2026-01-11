@@ -59,7 +59,7 @@ const callGeminiAPI = async (modelName: string, contents: any, config?: any) => 
         console.log(`[GeminiService] Raw Fetch to: ${functionUrl}`);
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+        const timeoutId = setTimeout(() => controller.abort(), 120000); // 120s timeout for slow AI+Search
 
         const response = await fetch(functionUrl, {
             method: 'POST',
