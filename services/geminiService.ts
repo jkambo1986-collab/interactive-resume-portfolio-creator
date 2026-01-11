@@ -54,6 +54,9 @@ const callGeminiAPI = async (modelName: string, contents: any, config?: any) => 
 
         console.log(`[GeminiService] Raw Fetch to: ${functionUrl}`);
 
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+
         const response = await fetch(functionUrl, {
             method: 'POST',
             headers: {
@@ -64,8 +67,23 @@ const callGeminiAPI = async (modelName: string, contents: any, config?: any) => 
                 modelName,
                 contents: finalContents,
                 config
-            })
+            }),
+            signal: controller.signal
         });
+
+        clearTimeout(timeoutId);
+
+        console.log(`[GeminiService] Raw Fetch Response Status: ${response.status}`);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            window.alert(`[DEBUG] Raw Fetch Failed: ${response.status} ${response.statusText}\n${errorText}`);
+            throw new Error(`Proxy Error: ${response.status} ${errorText}`);
+        }
+
+        const data = await response.json();
+        console.log("[GeminiService] Response Data:", data);
+        // window.alert("[DEBUG] Success! Data received from Gemini."); // Optional: Enable if you want visible proof
 
         if (!response.ok) {
             const errorText = await response.text();
