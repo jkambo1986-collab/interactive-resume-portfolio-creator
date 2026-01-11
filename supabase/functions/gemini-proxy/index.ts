@@ -23,11 +23,20 @@ serve(async (req) => {
 
         console.log(`Processing request for model: ${modelName}`)
 
-        const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
-        const model = genAI.getGenerativeModel({
+        // FIX: Extract 'tools' from config because it must be a sibling of generationConfig, not a child.
+        const { tools, ...generationConfig } = config || {};
+
+        const modelParams: any = {
             model: modelName,
-            generationConfig: config
-        })
+            generationConfig: generationConfig
+        };
+
+        if (tools) {
+            modelParams.tools = tools;
+        }
+
+        const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
+        const model = genAI.getGenerativeModel(modelParams)
 
         // Normalize contents format for SDK compatibility
         // The SDK expects either a string or properly formatted content parts
