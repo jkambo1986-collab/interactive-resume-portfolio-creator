@@ -76,13 +76,6 @@ const callGeminiAPI = async (modelName: string, contents: any, config?: any) => 
         const data = await response.json();
         // const { data, error } = await supabase.functions.invoke... (REMOVED)
 
-        if (error) {
-            // DEBUG: Alert on error
-            window.alert(`[DEBUG] Proxy Invoke Error: ${JSON.stringify(error)}`);
-            console.error("[GeminiService] Proxy Error:", error);
-            throw new Error(error.message || "Failed to communicate with AI service.");
-        }
-
         if (data.error) {
             throw new Error(data.error);
         }
