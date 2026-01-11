@@ -56,14 +56,34 @@ const callGeminiAPI = async (modelName: string, contents: any, config?: any) => 
         window.alert(`[DEBUG] Invoking gemini-proxy for ${modelName}...`);
         console.log("[DEBUG] Payload being sent:", { modelName, contents: finalContents, config });
 
-        const { data, error } = await supabase.functions.invoke('gemini-proxy', {
+        // RAW FETCH IMPLEMENTATION (Bypassing Supabase Client)
+        const projectUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim();
+        const anonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY || '').trim();
+        const functionUrl = `${projectUrl}/functions/v1/gemini-proxy`;
+
+        console.log(`[GeminiService] Raw Fetch to: ${functionUrl}`);
+
+        const response = await fetch(functionUrl, {
             method: 'POST',
-            body: {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${anonKey}`,
+            },
+            body: JSON.stringify({
                 modelName,
                 contents: finalContents,
                 config
-            }
+            })
         });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            window.alert(`[DEBUG] Raw Fetch Failed: ${response.status} ${response.statusText}\n${errorText}`);
+            throw new Error(`Proxy Error: ${response.status} ${errorText}`);
+        }
+
+        const data = await response.json();
+        // const { data, error } = await supabase.functions.invoke... (REMOVED)
 
         if (error) {
             // DEBUG: Alert on error
